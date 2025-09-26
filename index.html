@@ -11,8 +11,7 @@
 <link rel="icon" href="logo.png" />
 <link rel="apple-touch-icon" href="logo.png" />
 
-<!-- Social Preview 
-Note: most platforms prefer absolute URLs. This uses local logo.png; if you host, replace with the hosted absolute URL. -->
+<!-- Social Preview -->
 <meta property="og:title" content="1TON — Meme On TON" />
 <meta property="og:description" content="It’s simple: 1 token, TON energy, meme forever." />
 <meta property="og:type" content="website" />
@@ -87,36 +86,30 @@ header{position:sticky; top:0; z-index:10; backdrop-filter: blur(12px);
   width:38px; height:38px; border-radius:12px; display:block; object-fit:cover;
   box-shadow: inset 0 0 12px rgba(255,255,255,.15), 0 8px 18px rgba(20,168,255,.35);
 }
-/* graceful fallback block if image fails */
+/* fallback if logo.png fails */
 .logo-fallback{
   width:38px; height:38px; border-radius:12px; display:grid; place-items:center; font-weight:1000;
   background:conic-gradient(from 210deg, var(--tone2), var(--tone));
   text-shadow:0 2px 0 rgba(0,0,0,.35); box-shadow: inset 0 0 12px rgba(255,255,255,.25), 0 8px 18px rgba(20,168,255,.35);
 }
 
-/* --- Hero --- */
+/* --- Grid / sections / tags --- */
 .hero{padding:clamp(26px,6vw,64px) 0}
 h1{font-size:clamp(30px,10vw,64px); line-height:1.02; margin:8px 0; letter-spacing:.5px; font-weight:1000}
 .accent{background:linear-gradient(90deg, var(--tone2), var(--tone), var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent}
 .sub{color:#cfe5ff; font-size:clamp(14px,3.4vw,18px); margin:10px 0 16px}
 .cta{display:flex; flex-wrap:wrap; gap:10px}
 @media (max-width:560px){ .cta .btn{flex:1 1 100%} }
-
-/* --- Grid --- */
 .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
 @media (max-width:900px){ .grid{grid-template-columns:1fr} }
 .tile{padding:16px}
 .tile h3{margin:0 0 6px; font-size:clamp(16px,3.4vw,20px)}
 .tile p{margin:0; color:#cfe5ff; font-size:clamp(13px,3vw,16px)}
-
-/* --- Sections --- */
 section{padding:28px 0}
 .badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
   background:var(--glass); border:1px solid var(--stroke); color:#cfe5ff; font-size:12px; text-transform:uppercase}
 .mono{font-family:ui-monospace, Menlo, Consolas, monospace; word-break:break-all}
 .tilt{transform: rotate(-1.2deg)} .tilt2{transform: rotate(1.4deg)}
-
-/* --- Meme Wall --- */
 .wall{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
 @media (max-width:900px){ .wall{grid-template-columns:1fr} }
 .tag{display:inline-block; font-weight:1000; letter-spacing:.3px; padding:8px 12px; border-radius:999px;
@@ -125,13 +118,14 @@ section{padding:28px 0}
 /* --- Footer --- */
 footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; font-size:14px}
 
-/* --- Confetti --- */
+/* --- Party Burst (logos) --- */
 .confetti{position:fixed; inset:0; pointer-events:none; z-index:20; display:none}
 .confetti.active{display:block}
-.confetti i{position:absolute; width:10px; height:14px; opacity:.9; animation: conf linear forwards}
-@keyframes conf{ to{ transform: translateY(110vh) rotate(720deg); opacity:1 } }
+.piece{position:absolute; will-change:transform,opacity; filter: drop-shadow(0 8px 14px rgba(0,0,0,.35))}
+.piece svg{display:block}
+@keyframes partyFall{to{ transform: translateY(110vh) rotate(720deg); opacity:1 }}
 
-/* --- Fixed BUY bar --- */
+ /* --- Fixed BUY bar --- */
 .buybar{
   position:fixed; left:0; right:0; bottom:0; z-index:30;
   backdrop-filter: blur(10px);
@@ -139,9 +133,7 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
   border-top:1px solid var(--stroke);
   padding:10px 12px calc(10px + env(safe-area-inset-bottom));
 }
-.buybar .row{
-  max-width:980px; margin:0 auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-}
+.buybar .row{ max-width:980px; margin:0 auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .buybar .pill{
   display:flex; align-items:center; gap:10px;
   border:1px solid var(--stroke); border-radius:999px; padding:8px 12px;
@@ -175,7 +167,6 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
 <header>
   <div class="wrap nav">
     <a class="brand" href="#">
-      <!-- Use local logo.png; fallback to gradient block if it fails -->
       <img src="logo.png" alt="1TON logo" class="logo"
            onerror="this.outerHTML='<div class=&quot;logo-fallback&quot;>1</div>'" />
       <strong>1TON</strong>
@@ -306,7 +297,7 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
   </div>
 </footer>
 
-<!-- Confetti Layer -->
+<!-- Party Burst Layer -->
 <div class="confetti" id="confetti"></div>
 
 <!-- Fixed BUY bar -->
@@ -334,10 +325,7 @@ const CHART    = "https://www.geckoterminal.com/ton/pools/EQCSyBHPkqVpdvSMjOsInm
 /* STON.fi BUY LINK (wired) */
 const DEX_BUY  = "https://app.ston.fi/swap?chartVisible=false&chartInterval=1w&ft=TON&tt=EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbK7FbJnv1q4U";
 
-/* ========= GeckoTerminal API (token endpoint) =========
-   Root: https://api.geckoterminal.com/api/v2  (public; cached ~1 min)
-   We pull token price & caps directly by token (jetton) address on TON.
-   Docs note market_cap_usd may be null; we fallback to fdv_usd. */
+/* ========= GeckoTerminal API (token endpoint) ========= */
 const TOKEN_API = `https://api.geckoterminal.com/api/v2/networks/ton/tokens/${CONTRACT}`;
 
 /* ========= Derived ========= */
@@ -388,15 +376,12 @@ function flash(msg, type){
 /* ========= Live price & market cap via GeckoTerminal ========= */
 async function loadLive(){
   try{
-    const r = await fetch(TOKEN_API, {
-      headers: { "accept": "application/json" } // can set version header if you like
-    });
+    const r = await fetch(TOKEN_API, { headers: { "accept": "application/json" } });
     const j = await r.json();
     const attr = j?.data?.attributes;
     if(!attr) throw new Error("No token data");
 
     const price = parseFloat(attr.price_usd);
-    // Prefer market_cap_usd; fallback to fdv_usd when null
     const mcRaw = attr.market_cap_usd ?? attr.fdv_usd ?? null;
 
     $("#price").textContent = fmtUSD(price);
@@ -414,7 +399,7 @@ async function loadLive(){
 loadLive();
 setInterval(loadLive, 30000); // refresh every 30s
 
-/* ========= Rotating line in marquee ========= */
+/* ========= Rotating marquee line ========= */
 const ROTATE_LINES = [
   "WAGMI ✨",
   "CROWDED WITH WINS 🐦",
@@ -430,7 +415,7 @@ setInterval(()=>{
   el.textContent = ROTATE_LINES[rIdx];
 }, 2200);
 
-/* ========= TON + Telegram Logo Rain ========= */
+/* ========= Background logo rain (steady) ========= */
 const rain = document.getElementById("logoRain");
 const COLORS = ["#14a8ff","#23d2ff","#2aa3e0","#ffffff"];
 function spawnDrop(){
@@ -463,25 +448,51 @@ function spawnDrop(){
 for(let i=0;i<40;i++) spawnDrop();
 setInterval(spawnDrop, 500);
 
-/* ========= Party mode (confetti) ========= */
+/* ========= Party Mode: burst of TON + Telegram logos ========= */
 const conf = $("#confetti");
 $("#party").addEventListener("click", () => {
-  conf.classList.add("active");
-  burst();
-  setTimeout(()=> conf.classList.remove("active"), 1800);
+  partyBurst();
 });
-function burst(){
+
+function partyBurst(){
   conf.innerHTML = "";
-  const colors = ["#14a8ff","#23d2ff","#ffd166","#ff7ad9","#70ff95","#ffffff"];
-  for(let i=0;i<140;i++){
-    const c = document.createElement("i");
-    const x = Math.random()*100; const d = 600 + Math.random()*1200;
-    c.style.left = x + "vw"; c.style.top = "-6vh";
-    c.style.background = colors[Math.floor(Math.random()*colors.length)];
-    c.style.transform = `translateY(0) rotate(${Math.random()*360}deg)`;
-    c.style.animationDuration = (d/1000) + "s"; c.style.opacity = .95;
-    conf.appendChild(c);
+  conf.classList.add("active");
+
+  const pieces = Math.min(160, Math.floor(window.innerWidth / 6)); // responsive count
+  for(let i=0;i<pieces;i++){
+    const piece = document.createElement("div");
+    piece.className = "piece";
+
+    const isTON = Math.random() < 0.6;              // more TON than TG
+    const size  = 18 + Math.random()*36;            // 18px - 54px
+    const x     = Math.random()*100;                // vw
+    const rot0  = Math.floor(Math.random()*360);
+    const dur   = 0.9 + Math.random()*1.6;          // 0.9s - 2.5s
+    const delay = Math.random()*0.25;               // small stagger
+
+    piece.style.left = x + "vw";
+    piece.style.top  = "-8vh";
+    piece.style.animation = `partyFall ${dur}s linear ${delay}s forwards`;
+    piece.style.transform = `rotate(${rot0}deg)`;
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("viewBox","0 0 24 24");
+    svg.setAttribute("width", size);
+    svg.setAttribute("height", size);
+    svg.style.color = COLORS[Math.floor(Math.random()*COLORS.length)];
+    const use = document.createElementNS("http://www.w3.org/2000/svg","use");
+    use.setAttributeNS("http://www.w3.org/1999/xlink","href", isTON ? "#ico-ton" : "#ico-tg");
+    svg.appendChild(use);
+
+    piece.appendChild(svg);
+    conf.appendChild(piece);
   }
+
+  // auto-hide the party layer after the longest animation ends
+  const maxTime = 2600; // ms
+  setTimeout(()=> conf.classList.remove("active"), maxTime);
+  // cleanup old nodes to keep DOM light
+  setTimeout(()=> conf.innerHTML = "", maxTime + 200);
 }
 
 /* ========= Keyboard shortcuts ========= */
@@ -491,4 +502,4 @@ document.addEventListener("keydown", (e)=>{
 });
 </script>
 </body>
-  </html>
+</html>
