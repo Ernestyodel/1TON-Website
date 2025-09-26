@@ -37,6 +37,8 @@ body{
     radial-gradient(1200px 800px at 110% 10%, #102246 0%, transparent 55%),
     linear-gradient(180deg, var(--bg1), var(--bg2));
   overflow-x:hidden;
+  /* keep content above the fixed buy bar */
+  padding-bottom: 92px; /* bar height + spacing */
 }
 
 /* --- LOGO RAIN (TON + Telegram) --- */
@@ -125,6 +127,34 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
 .confetti.active{display:block}
 .confetti i{position:absolute; width:10px; height:14px; opacity:.9; animation: conf linear forwards}
 @keyframes conf{ to{ transform: translateY(110vh) rotate(720deg); opacity:1 } }
+
+/* --- Fixed BUY bar --- */
+.buybar{
+  position:fixed; left:0; right:0; bottom:0; z-index:30;
+  backdrop-filter: blur(10px);
+  background:linear-gradient(180deg, rgba(6,11,24,.92), rgba(6,11,24,.86));
+  border-top:1px solid var(--stroke);
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+}
+.buybar .row{
+  max-width:980px; margin:0 auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.buybar .pill{
+  display:flex; align-items:center; gap:10px;
+  border:1px solid var(--stroke); border-radius:999px; padding:8px 12px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  font-weight:800; color:#cfe5ff;
+}
+.buybar .mini{
+  font-size:12px; color:#a9bfdc; font-weight:700; letter-spacing:.2px;
+}
+.buybar .spacer{flex:1}
+.buybar .btn{padding:12px 14px; border-radius:12px}
+@media (max-width:520px){
+  .buybar .row{justify-content:space-between}
+  .buybar .spacer{display:none}
+  .buybar .pill{order:3; width:100%; justify-content:space-between}
+}
 </style>
 </head>
 <body>
@@ -150,7 +180,6 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
     <a class="brand" href="#"><div class="logo">1</div><strong>1TON</strong></a>
     <div class="cta">
       <a class="btn sun" id="party">🎉 Party Mode</a>
-      <a class="btn" id="share">📸 Share Card</a>
       <a class="btn" id="buy-link" target="_blank" rel="noopener">BUY</a>
     </div>
   </div>
@@ -167,8 +196,8 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
 </div>
 
 <main class="wrap">
-  <!-- HERO (wrapped for screenshot) -->
-  <section class="hero" id="shareTarget">
+  <!-- HERO -->
+  <section class="hero">
     <div class="sticker pop" style="--rot:-0.6deg">
       <div class="badge">THE MEME</div>
       <h1><span class="accent">1TON</span> is the <span class="accent">ONE</span>—simple name, loud energy.</h1>
@@ -215,18 +244,18 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
     </div>
   </section>
 
-  <!-- FUN TICKER (placeholder) -->
+  <!-- LIVE TICKER -->
   <section id="ticker">
     <div class="grid">
       <div class="sticker tile">
-        <div class="badge">Vibe Price*</div>
+        <div class="badge">Price (USD)</div>
         <h3 class="mono" id="price">—</h3>
-        <p class="sub" style="margin:6px 0 0; font-size:12px; color:var(--muted)">*just for fun, wire real data later</p>
+        <p class="sub mini" id="lastUpdated" style="margin-top:6px">Live via Dexscreener</p>
       </div>
       <div class="sticker tile">
-        <div class="badge">Vibe Cap*</div>
+        <div class="badge">Market Cap</div>
         <h3 class="mono" id="mcap">—</h3>
-        <p class="sub" style="margin:6px 0 0; font-size:12px; color:var(--muted)">*we’re memeing here</p>
+        <p class="sub mini" style="margin-top:6px">Using marketCap (fallback: FDV)</p>
       </div>
       <div class="sticker tile">
         <div class="badge">Buttons</div>
@@ -244,7 +273,6 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
       <div class="badge">Meme Wall</div>
       <p class="sub" style="margin-top:10px">Edit these in the HTML to change the vibe. The marquee line also rotates below.</p>
       <div class="wall" id="wallGrid" style="margin-top:12px">
-        <!-- Edit the slogans here -->
         <div class="tag">1TON TO TELE MOON 🌙</div>
         <div class="tag">TONIANS DON’T SLEEP 🦾</div>
         <div class="tag">POST FIRST, ASK LATER 😎</div>
@@ -280,14 +308,34 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
 <!-- Confetti Layer -->
 <div class="confetti" id="confetti"></div>
 
+<!-- Fixed BUY bar -->
+<div class="buybar" role="region" aria-label="Quick actions">
+  <div class="row">
+    <div class="pill">
+      <span>Price:</span><span class="mono" id="barPrice">—</span>
+      <span class="mini">•</span>
+      <span>MC:</span><span class="mono" id="barMcap">—</span>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn ghost" id="barCopy">📋 Copy CA</a>
+    <a class="btn" id="barChart" target="_blank" rel="noopener">📈 Chart</a>
+    <a class="btn lime" id="barBuy" target="_blank" rel="noopener">🛒 Buy</a>
+  </div>
+</div>
+
 <script>
 /* ========= CONFIG ========= */
 const CONTRACT = "EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbK7FbJnv1q4U";
 const X_URL    = "https://x.com/1Ton1Ton";
 const TG_URL   = "https://t.me/OneTonToken";
 const CHART    = "https://dexscreener.com/ton/EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbJnv1q4U";
-// When live on a DEX (DeDust / STON.fi), put the pair link here. Empty = fallback to CHART
-const DEX_BUY  = "";
+/* STON.fi BUY LINK */
+const DEX_BUY  = "https://app.ston.fi/swap?chartVisible=false&chartInterval=1w&ft=TON&tt=EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbK7FbJnv1q4U";
+
+/* ========= Dexscreener Pair API (live data) =========
+   Docs: https://docs.dexscreener.com/api/reference -> /latest/dex/pairs/{chainId}/{pairId}
+*/
+const PAIR_API = "https://api.dexscreener.com/latest/dex/pairs/ton/EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbK7FbJnv1q4U";
 
 /* ========= Derived ========= */
 const TONVIEW  = `https://tonviewer.com/jetton/${CONTRACT}`;
@@ -295,21 +343,37 @@ const TONSCAN  = `https://tonscan.org/jetton/${CONTRACT}`;
 
 /* ========= Helper ========= */
 const $ = (s) => document.querySelector(s);
+const fmtUSD = (n) => {
+  if (n == null || isNaN(n)) return "—";
+  const x = Number(n);
+  return x >= 1 ? "$" + x.toLocaleString(undefined, {maximumFractionDigits:2})
+                : "$" + x.toFixed(6);
+};
+const fmtMC = (n) => {
+  if (n == null || isNaN(n)) return "—";
+  const x = Number(n);
+  if (x >= 1e9) return "$" + (x/1e9).toFixed(2) + "B";
+  if (x >= 1e6) return "$" + (x/1e6).toFixed(2) + "M";
+  if (x >= 1e3) return "$" + (x/1e3).toFixed(2) + "K";
+  return "$" + x.toFixed(0);
+};
 
 /* ========= Wire links & content ========= */
 $("#ca").textContent = CONTRACT;
 $("#x-link").href = X_URL; $("#join-x").href = X_URL;
 $("#tg-link").href = TG_URL; $("#join-tg").href = TG_URL;
 $("#tonviewer-link").href = TONVIEW; $("#tonscan-link").href = TONSCAN;
-$("#chart-link").href = CHART;
-$("#buy-link").href = DEX_BUY && DEX_BUY.trim() ? DEX_BUY : CHART;
+$("#chart-link").href = CHART; $("#barChart").href = CHART;
+$("#buy-link").href = DEX_BUY; $("#barBuy").href = DEX_BUY;
 $("#year").textContent = new Date().getFullYear();
 
-/* ========= Copy contract ========= */
-$("#copy").addEventListener("click", async () => {
+/* ========= Copy contract (both places) ========= */
+$("#copy").addEventListener("click", () => copyCA());
+$("#barCopy").addEventListener("click", () => copyCA());
+async function copyCA(){
   try{ await navigator.clipboard.writeText(CONTRACT); flash("Copied! 📋"); }
   catch{ flash("Copy failed 😵", "err"); }
-});
+}
 function flash(msg, type){
   const n = document.createElement("div");
   n.textContent = msg;
@@ -318,17 +382,31 @@ function flash(msg, type){
   document.body.appendChild(n); setTimeout(()=>n.remove(),1300);
 }
 
-/* ========= Fun ticker (placeholder) ========= */
-function formatUSD(x){ return "$" + (Math.abs(x) >= 1 ? x.toLocaleString() : x.toFixed(6)); }
-function rand(min,max){ return Math.random()*(max-min)+min; }
-let price = rand(0.000001, 0.0005), mcap = rand(10000, 300000);
-function tick(){
-  price += rand(-price*0.025, price*0.025);
-  mcap  += rand(-mcap*0.012, mcap*0.012);
-  $("#price").textContent = formatUSD(Math.max(price, 0.0000001));
-  $("#mcap").textContent  = formatUSD(Math.max(mcap, 1000));
+/* ========= Live price & market cap via Dexscreener ========= */
+async function loadLive(){
+  try{
+    const r = await fetch(PAIR_API, {cache:"no-store"});
+    const j = await r.json();
+    const p = j?.pairs?.[0];
+    if(!p) throw new Error("No pair");
+    const price = parseFloat(p.priceUsd);
+    // Prefer marketCap; if missing, fall back to fdv
+    const mc = (p.marketCap ?? p.fdv ?? null);
+
+    $("#price").textContent = fmtUSD(price);
+    $("#mcap").textContent  = fmtMC(mc);
+    $("#barPrice").textContent = fmtUSD(price);
+    $("#barMcap").textContent  = fmtMC(mc);
+    const t = new Date();
+    $("#lastUpdated").textContent = "Updated " + t.toLocaleTimeString();
+  }catch(e){
+    // keep previous values; show a subtle nudge once
+    console.warn(e);
+    $("#lastUpdated").textContent = "Live feed unavailable";
+  }
 }
-tick(); setInterval(tick, 1600);
+loadLive();
+setInterval(loadLive, 30000); // refresh every 30s
 
 /* ========= Rotating line in marquee ========= */
 const ROTATE_LINES = [
@@ -352,11 +430,11 @@ const COLORS = ["#14a8ff","#23d2ff","#2aa3e0","#ffffff"];
 function spawnDrop(){
   const d = document.createElement("div");
   d.className = "drop";
-  const isTON = Math.random() < 0.55; // bias toward TON
-  const size = 18 + Math.random()*28; // px
-  const left = Math.random()*100;      // vw
-  const dur  = 8 + Math.random()*10;   // s
-  const delay= Math.random()*10;       // s
+  const isTON = Math.random() < 0.55;
+  const size = 18 + Math.random()*28;
+  const left = Math.random()*100;
+  const dur  = 8 + Math.random()*10;
+  const delay= Math.random()*10;
   const rot0 = Math.floor(Math.random()*360);
 
   d.style.left = left + "vw";
@@ -374,12 +452,9 @@ function spawnDrop(){
   d.appendChild(svg);
   rain.appendChild(d);
 
-  // optional cleanup to prevent DOM from growing forever
   setTimeout(()=>{ d.remove(); }, (dur+delay)*1000*1.2);
 }
-// initial batch
 for(let i=0;i<40;i++) spawnDrop();
-// continuous spawn
 setInterval(spawnDrop, 500);
 
 /* ========= Party mode (confetti) ========= */
@@ -402,68 +477,6 @@ function burst(){
     conf.appendChild(c);
   }
 }
-
-/* ========= 📸 Share Card (PNG export, no libs) ========= */
-$("#share").addEventListener("click", async () => {
-  const node = document.getElementById("shareTarget");
-  const rect = node.getBoundingClientRect();
-  const width = Math.ceil(rect.width);
-  const height = Math.ceil(rect.height);
-  const scale = window.devicePixelRatio > 1 ? 2 : 2; // crisp on phones
-
-  // Collect inline <style> tags from this document so the clone renders correctly
-  const styleTags = Array.from(document.head.querySelectorAll("style"))
-    .map(s => s.outerHTML).join("");
-
-  // Clone the node so we can inject it in the SVG without IDs collisions
-  const clone = node.cloneNode(true);
-
-  // Wrap clone with a container to keep styles scoped and add padding if you want
-  const wrapper = document.createElement("div");
-  wrapper.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
-  wrapper.style.width = width + "px";
-  wrapper.style.height = height + "px";
-  wrapper.style.display = "block";
-  wrapper.innerHTML = styleTags + clone.outerHTML;
-
-  const serializer = new XMLSerializer();
-  const xhtml = serializer.serializeToString(wrapper);
-
-  // Background behind foreignObject to avoid transparent edges
-  const svg =
-`<svg xmlns="http://www.w3.org/2000/svg" width="${width*scale}" height="${height*scale}" viewBox="0 0 ${width} ${height}">
-  <rect width="100%" height="100%" fill="#060b18"/>
-  <foreignObject x="0" y="0" width="100%" height="100%">
-    ${xhtml}
-  </foreignObject>
-</svg>`;
-
-  const svgBlob = new Blob([svg], {type: "image/svg+xml;charset=utf-8"});
-  const url = URL.createObjectURL(svgBlob);
-
-  const img = new Image();
-  img.onload = () => {
-    const canvas = document.createElement("canvas");
-    canvas.width = width*scale;
-    canvas.height = height*scale;
-    const ctx = canvas.getContext("2d");
-    // white shadow to make sticker pop if needed
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    URL.revokeObjectURL(url);
-
-    canvas.toBlob((blob) => {
-      const a = document.createElement("a");
-      a.download = "1ton-share-card.png";
-      a.href = URL.createObjectURL(blob);
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-      flash("PNG saved! 📸");
-    }, "image/png");
-  };
-  img.onerror = () => flash("Screenshot failed 😵", "err");
-  img.src = url;
-});
 
 /* ========= Keyboard shortcuts ========= */
 document.addEventListener("keydown", (e)=>{
