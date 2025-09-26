@@ -4,28 +4,24 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>1TON — Meme On TON</title>
-<meta name="description" content="1TON — a loud, fun, meme-native token on TON. No boring vibes." />
+<meta name="description" content="1TON — a loud, fun, meme-native token on TON." />
 <meta name="theme-color" content="#14a8ff" />
 
 <!-- Social Preview -->
 <meta property="og:title" content="1TON — Meme On TON" />
 <meta property="og:description" content="It’s simple: 1 token, TON energy, meme forever." />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="data:image/svg+xml;utf8,
-<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'>
-  <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%2314a8ff'/><stop offset='100%' stop-color='%2323d2ff'/></linearGradient></defs>
-  <rect width='100%' height='100%' fill='%23060b18'/>
-  <text x='50%' y='50%' text-anchor='middle' font-family='Arial' font-size='180' fill='url(%23g)' font-weight='900' dy='-18'>1TON</text>
-  <text x='50%' y='62%' text-anchor='middle' font-family='Arial' font-size='56' fill='%23cbe6ff'>Meme on TON</text>
-</svg>"/>
+<meta property="og:image" content="logo.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="logo.png" />
 
 <style>
 :root{
   --bg1:#060b18; --bg2:#0b1226;
-  --tone:#14a8ff; --tone2:#23d2ff; --tg:#2aa3e0; --ink:#eaf3ff;
+  --tone:#14a8ff; --tone2:#23d2ff; --ink:#eaf3ff;
   --pink:#ff7ad9; --lime:#70ff95; --sun:#ffd166;
   --muted:#9db3cc; --stroke:rgba(255,255,255,.12);
-  --glass:rgba(255,255,255,.08); --shadow:0 14px 40px rgba(0,0,0,.45);
+  --glass:rgba(255,255,255,.08);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -36,98 +32,58 @@ body{
     radial-gradient(1600px 800px at -10% -20%, #1e2c54 0%, transparent 55%),
     radial-gradient(1200px 800px at 110% 10%, #102246 0%, transparent 55%),
     linear-gradient(180deg, var(--bg1), var(--bg2));
-  overflow-x:hidden;
-  padding-bottom: 92px; /* space for fixed buy bar */
+  padding-bottom:90px;
 }
-
-/* --- LOGO RAIN (TON + Telegram) --- */
-#logoRain{position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:.26}
-.drop{position:absolute; top:-12vh; will-change:transform,opacity; filter: drop-shadow(0 8px 14px rgba(0,0,0,.35))}
-@keyframes fall{0%{transform:translateY(-12vh) rotate(0)} 100%{transform:translateY(120vh) rotate(360deg)}}
-.drop svg{display:block}
-
-/* --- Marquee --- */
-.marquee{overflow:hidden; white-space:nowrap; border-block:1px dashed var(--stroke);
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-}
-.track{display:inline-block; padding:12px 0; animation: scroll 24s linear infinite; font-weight:900; letter-spacing:.5px}
-@keyframes scroll{ to{ transform: translateX(-50%) } }
-.track span{margin:0 18px; color:#cfe5ff}
-
-/* --- Stickers --- */
-.sticker{
-  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
-  border:2px solid var(--stroke); border-radius:20px; padding:14px 16px;
-  box-shadow: 0 0 0 4px rgba(2,16,32,.25) inset, 0 10px 24px rgba(0,0,0,.35), 0 0 0 2px rgba(255,255,255,.05);
-  transform: rotate(var(--rot,0deg));
-}
-.sticker.pop{filter: drop-shadow(0 10px 0 rgba(0,0,0,.25))}
-
-/* --- Buttons --- */
-.btn{
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  padding:14px 16px; border-radius:16px; text-decoration:none; font-weight:900;
-  border:2px solid transparent; color:#05101d;
-  background:linear-gradient(180deg, var(--tone2), var(--tone));
-  box-shadow:0 10px 24px rgba(20,168,255,.35);
-  transition: transform .12s ease;
-}
-.btn:hover{ transform: translateY(-2px) scale(1.02) }
-.btn.ghost{ color:var(--ink); background:transparent; border-color:var(--stroke); box-shadow:none }
-.btn.sun{ background:linear-gradient(180deg, var(--sun), #ffb347) }
-.btn.lime{ background:linear-gradient(180deg, var(--lime), #35ff74) }
-
 .wrap{max-width:980px; margin:0 auto; padding:0 16px}
 
-/* --- Header --- */
+/* Header */
 header{position:sticky; top:0; z-index:10; backdrop-filter: blur(12px);
-  background:linear-gradient(180deg, rgba(6,11,24,.85), rgba(6,11,24,.35)); border-bottom:1px solid var(--stroke)}
-.nav{display:flex; align-items:center; justify-content:space-between; min-height:64px; gap:10px}
-.brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink)}
-.logo{
-  width:38px; height:38px; border-radius:12px; display:grid; place-items:center; font-weight:1000;
-  background:conic-gradient(from 210deg, var(--tone2), var(--tone)); text-shadow:0 2px 0 rgba(0,0,0,.35);
+  background:linear-gradient(180deg, rgba(6,11,24,.85), rgba(6,11,24,.35));
+  border-bottom:1px solid var(--stroke)}
+.nav{display:flex; align-items:center; justify-content:space-between; min-height:64px}
+.brand img.logo-img{
+  width:38px; height:38px; border-radius:12px; object-fit:cover;
   box-shadow: inset 0 0 12px rgba(255,255,255,.25), 0 8px 18px rgba(20,168,255,.35);
 }
 
-/* --- Hero --- */
-.hero{padding:clamp(26px,6vw,64px) 0}
-h1{font-size:clamp(30px,10vw,64px); line-height:1.02; margin:8px 0; letter-spacing:.5px; font-weight:1000}
-.accent{background:linear-gradient(90deg, var(--tone2), var(--tone), var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent}
-.sub{color:#cfe5ff; font-size:clamp(14px,3.4vw,18px); margin:10px 0 16px}
-.cta{display:flex; flex-wrap:wrap; gap:10px}
-@media (max-width:560px){ .cta .btn{flex:1 1 100%} }
+/* Buttons */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:12px 16px; border-radius:12px; text-decoration:none; font-weight:900;
+  border:2px solid transparent; color:#05101d;
+  background:linear-gradient(180deg, var(--tone2), var(--tone));
+  box-shadow:0 6px 14px rgba(20,168,255,.35);
+  transition: transform .12s ease;
+}
+.btn:hover{ transform: translateY(-2px) scale(1.02) }
+.btn.sun{ background:linear-gradient(180deg, var(--sun), #ffb347) }
+.btn.lime{ background:linear-gradient(180deg, var(--lime), #35ff74) }
+.btn.ghost{ background:transparent; border-color:var(--stroke); color:var(--ink); box-shadow:none }
 
-/* --- Grid --- */
-.grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-@media (max-width:900px){ .grid{grid-template-columns:1fr} }
-.tile{padding:16px}
-.tile h3{margin:0 0 6px; font-size:clamp(16px,3.4vw,20px)}
-.tile p{margin:0; color:#cfe5ff; font-size:clamp(13px,3vw,16px)}
+/* Hero */
+.hero{padding:40px 0; text-align:center}
+.hero h1{font-size:42px; line-height:1.1; margin:0 0 12px}
+.hero .accent{background:linear-gradient(90deg, var(--tone2), var(--pink));
+  -webkit-background-clip:text; color:transparent}
+.hero p{color:#cfe5ff; font-size:18px; margin:0 0 20px}
+.cta{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
+@media(max-width:560px){.cta .btn{flex:1 1 100%}}
 
-/* --- Sections --- */
-section{padding:28px 0}
-.badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
-  background:var(--glass); border:1px solid var(--stroke); color:#cfe5ff; font-size:12px; text-transform:uppercase}
-.mono{font-family:ui-monospace, Menlo, Consolas, monospace; word-break:break-all}
-.tilt{transform: rotate(-1.2deg)} .tilt2{transform: rotate(1.4deg)}
+/* Info Grid */
+.grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.tile{padding:16px; border:1px solid var(--stroke);
+  border-radius:16px; background:rgba(255,255,255,.05)}
+.tile h3{margin:0 0 8px}
+.tile p{margin:0; color:#cfe5ff; font-size:14px}
 
-/* --- Meme Wall --- */
-.wall{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-@media (max-width:900px){ .wall{grid-template-columns:1fr} }
-.tag{display:inline-block; font-weight:1000; letter-spacing:.3px; padding:8px 12px; border-radius:999px;
-  background:linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.02)); border:2px dashed var(--stroke)}
+/* Contract Card */
+.card{margin:30px auto; max-width:600px; text-align:center;
+  border:1px solid var(--stroke); border-radius:16px; padding:20px;
+  background:rgba(255,255,255,.05)}
+.mono{font-family:monospace; word-break:break-all}
 
-/* --- Footer --- */
-footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; font-size:14px}
-
-/* --- Confetti --- */
-.confetti{position:fixed; inset:0; pointer-events:none; z-index:20; display:none}
-.confetti.active{display:block}
-.confetti i{position:absolute; width:10px; height:14px; opacity:.9; animation: conf linear forwards}
-@keyframes conf{ to{ transform: translateY(110vh) rotate(720deg); opacity:1 } }
-
-/* --- Fixed BUY bar --- */
+/* Buy Bar */
 .buybar{
   position:fixed; left:0; right:0; bottom:0; z-index:30;
   backdrop-filter: blur(10px);
@@ -135,354 +91,118 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
   border-top:1px solid var(--stroke);
   padding:10px 12px calc(10px + env(safe-area-inset-bottom));
 }
-.buybar .row{
-  max-width:980px; margin:0 auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-}
+.buybar .row{max-width:980px; margin:0 auto; display:flex; align-items:center; gap:10px}
 .buybar .pill{
-  display:flex; align-items:center; gap:10px;
-  border:1px solid var(--stroke); border-radius:999px; padding:8px 12px;
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  font-weight:800; color:#cfe5ff;
-}
-.buybar .mini{ font-size:12px; color:#a9bfdc; font-weight:700; letter-spacing:.2px; }
+  display:flex; gap:8px; align-items:center;
+  border:1px solid var(--stroke); border-radius:999px; padding:6px 12px;
+  background:rgba(255,255,255,.05); font-weight:800; color:#cfe5ff}
 .buybar .spacer{flex:1}
-.buybar .btn{padding:12px 14px; border-radius:12px}
-@media (max-width:520px){
-  .buybar .row{justify-content:space-between}
-  .buybar .spacer{display:none}
-  .buybar .pill{order:3; width:100%; justify-content:space-between}
-}
+@media(max-width:560px){.buybar .row{flex-wrap:wrap}}
 </style>
 </head>
 <body>
 
-<!-- Hidden SVG sprite -->
-<svg width="0" height="0" style="position:absolute;left:-9999px;top:-9999px">
-  <symbol id="ico-ton" viewBox="0 0 24 24">
-    <path d="M12 3 L20 9.5 L12 21 L4 9.5 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M12 3 L12 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-  </symbol>
-  <symbol id="ico-tg" viewBox="0 0 24 24">
-    <polygon points="2,12 22,3 15,21 11,14 2,12" fill="currentColor"/>
-  </symbol>
-</svg>
-
-<div id="logoRain" aria-hidden="true"></div>
-
 <header>
   <div class="wrap nav">
-    <a class="brand" href="#"><div class="logo">1</div><strong>1TON</strong></a>
+    <a class="brand" href="#"><img src="logo.png" alt="1TON" class="logo-img" /></a>
     <div class="cta">
-      <a class="btn sun" id="party">🎉 Party Mode</a>
-      <a class="btn" id="buy-link" target="_blank" rel="noopener">BUY</a>
+      <a class="btn sun" id="party">🎉 Party</a>
+      <a class="btn" id="buy-link" target="_blank">BUY</a>
     </div>
   </div>
 </header>
 
-<!-- Marquee -->
-<div class="marquee">
-  <div class="track" id="marqueeTrack">
-    <span>1TON ON TON 🧢</span><span>NO UTILITY, JUST VIBES 🚀</span><span>BUY? MAYBE. MEME? ALWAYS 💎</span>
-    <span>1TON • 1 COMMUNITY • 1 VIBE</span><span id="rotatingLine">WAGMI ✨</span>
-    <span>1TON ON TON 🧢</span><span>NO UTILITY, JUST VIBES 🚀</span><span>BUY? MAYBE. MEME? ALWAYS 💎</span>
-    <span>1TON • 1 COMMUNITY • 1 VIBE</span><span>MEME RESPONSIBLY 😎</span>
-  </div>
-</div>
-
 <main class="wrap">
-  <!-- HERO -->
   <section class="hero">
-    <div class="sticker pop" style="--rot:-0.6deg">
-      <div class="badge">THE MEME</div>
-      <h1><span class="accent">1TON</span> is the <span class="accent">ONE</span>—simple name, loud energy.</h1>
-      <p class="sub">If you get it, you get it. If you don’t—open the chart and pretend you did.</p>
-      <div class="cta">
-        <a class="btn" id="chart-link" target="_blank" rel="noopener">📈 View Chart</a>
-        <a class="btn ghost" href="#contract">📋 Copy Contract</a>
-        <a class="btn lime" href="#join">💬 Join Community</a>
-      </div>
+    <h1><span class="accent">1TON</span> — Meme on TON</h1>
+    <p>The loudest, simplest meme with TON energy. If you get it, you get it.</p>
+    <div class="cta">
+      <a class="btn" id="chart-link" target="_blank">📈 View Chart</a>
+      <a class="btn ghost" href="#contract">📋 Copy Contract</a>
+      <a class="btn lime" href="#join">💬 Join Community</a>
     </div>
   </section>
 
-  <!-- LORE / WHY -->
-  <section id="why">
-    <div class="grid">
-      <div class="sticker tile tilt">
-        <h3>🧢 Lore</h3>
-        <p>Born in the group chat. Crowned by the timeline. 1 name to rule TON.</p>
-      </div>
-      <div class="sticker tile tilt2">
-        <h3>📦 Simple</h3>
-        <p>No 80-page docs. No fake “AI”. Tap buy, post meme, touch grass.</p>
-      </div>
-      <div class="sticker tile" style="--rot:0.4deg">
-        <h3>🔊 Loud</h3>
-        <p>Marquees, stickers, and sparkles. If it’s not fun, it’s not 1TON.</p>
-      </div>
-    </div>
+  <section class="grid">
+    <div class="tile"><h3>🧢 Lore</h3><p>Born in group chats. Crowned by timelines. One name to rule TON.</p></div>
+    <div class="tile"><h3>📦 Simple</h3><p>No docs. No gimmicks. Tap buy, post meme, touch grass.</p></div>
+    <div class="tile"><h3>🔊 Loud</h3><p>Marquees, stickers, sparkles. If it’s not fun, it’s not 1TON.</p></div>
   </section>
 
-  <!-- CONTRACT / LINKS -->
   <section id="contract">
-    <div class="sticker pop">
-      <div class="badge">Contract</div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px">
-        <code class="mono" id="ca" style="font-size:14px"></code>
-        <a class="btn ghost" id="copy">Copy</a>
-      </div>
-
-      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px">
-        <a class="btn ghost" id="tonviewer-link" target="_blank" rel="noopener">Tonviewer</a>
-        <a class="btn ghost" id="tonscan-link" target="_blank" rel="noopener">Tonscan</a>
-      </div>
+    <div class="card">
+      <h3>Contract Address</h3>
+      <p class="mono" id="ca"></p>
+      <button class="btn ghost" id="copy">Copy</button>
     </div>
   </section>
 
-  <!-- LIVE TICKER -->
-  <section id="ticker">
-    <div class="grid">
-      <div class="sticker tile">
-        <div class="badge">Price (USD)</div>
-        <h3 class="mono" id="price">—</h3>
-        <p class="sub mini" id="lastUpdated" style="margin-top:6px">Live via GeckoTerminal</p>
-      </div>
-      <div class="sticker tile">
-        <div class="badge">Market Cap</div>
-        <h3 class="mono" id="mcap">—</h3>
-        <p class="sub mini" style="margin-top:6px">Uses market_cap_usd (fallback: FDV)</p>
-      </div>
-      <div class="sticker tile">
-        <div class="badge">Buttons</div>
-        <div class="cta" style="margin-top:8px">
-          <a class="btn" id="x-link" target="_blank" rel="noopener">𝕏 / Twitter</a>
-          <a class="btn lime" id="tg-link" target="_blank" rel="noopener">Telegram</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MEME WALL -->
-  <section id="wall">
-    <div class="sticker pop" style="--rot:-0.4deg">
-      <div class="badge">Meme Wall</div>
-      <p class="sub" style="margin-top:10px">Edit these in the HTML to change the vibe. The marquee line also rotates below.</p>
-      <div class="wall" id="wallGrid" style="margin-top:12px">
-        <div class="tag">1TON TO TELE MOON 🌙</div>
-        <div class="tag">TONIANS DON’T SLEEP 🦾</div>
-        <div class="tag">POST FIRST, ASK LATER 😎</div>
-        <div class="tag">DCA = Daily Cool Attitude</div>
-        <div class="tag">BUY BUTTON THERAPY 🧠</div>
-        <div class="tag">MEME NOW, FUD NEVER 🔒</div>
-        <div class="tag">CATCH THE VIBE ⚡️</div>
-        <div class="tag">ONE TOKEN. 1TON.</div>
-        <div class="tag">TELEGRAM IS HOME 🏠</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- JOIN -->
   <section id="join">
-    <div class="sticker pop" style="text-align:center">
-      <div class="badge">Join The Noise</div>
-      <div class="cta" style="justify-content:center; margin-top:12px">
-        <a class="btn" id="join-x" target="_blank" rel="noopener">🚀 Follow on X</a>
-        <a class="btn lime" id="join-tg" target="_blank" rel="noopener">💬 Telegram Portal</a>
+    <div class="card">
+      <h3>Join Community</h3>
+      <div class="cta">
+        <a class="btn" id="x-link" target="_blank">𝕏 / Twitter</a>
+        <a class="btn lime" id="tg-link" target="_blank">Telegram</a>
       </div>
     </div>
   </section>
 </main>
 
-<footer>
-  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-    <div>© <span id="year"></span> 1TON — Made by the timeline</div>
-    <a href="#wall" style="color:#d8e8ff;text-decoration:none;border-bottom:1px dotted rgba(216,232,255,.35)">Drop a new slogan</a>
-  </div>
-</footer>
-
-<!-- Confetti Layer -->
-<div class="confetti" id="confetti"></div>
-
 <!-- Fixed BUY bar -->
-<div class="buybar" role="region" aria-label="Quick actions">
+<div class="buybar">
   <div class="row">
     <div class="pill">
       <span>Price:</span><span class="mono" id="barPrice">—</span>
-      <span class="mini">•</span>
+      <span>•</span>
       <span>MC:</span><span class="mono" id="barMcap">—</span>
     </div>
     <div class="spacer"></div>
-    <a class="btn ghost" id="barCopy">📋 Copy CA</a>
-    <a class="btn" id="barChart" target="_blank" rel="noopener">📈 Chart</a>
-    <a class="btn lime" id="barBuy" target="_blank" rel="noopener">🛒 Buy</a>
+    <button class="btn ghost" id="barCopy">📋 Copy CA</button>
+    <a class="btn" id="barChart" target="_blank">📈 Chart</a>
+    <a class="btn lime" id="barBuy" target="_blank">🛒 Buy</a>
   </div>
 </div>
 
 <script>
-/* ========= CONFIG ========= */
 const CONTRACT = "EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbK7FbJnv1q4U";
-const X_URL    = "https://x.com/1Ton1Ton";
-const TG_URL   = "https://t.me/OneTonToken";
-/* GeckoTerminal pool page (your link) for the chart button */
-const CHART    = "https://www.geckoterminal.com/ton/pools/EQCSyBHPkqVpdvSMjOsInmyNy7INgJXa-6LcvHSbC1gekolT";
-/* STON.fi BUY LINK (wired) */
-const DEX_BUY  = "https://app.ston.fi/swap?chartVisible=false&chartInterval=1w&ft=TON&tt=EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbK7FbJnv1q4U";
+const X_URL = "https://x.com/1Ton1Ton";
+const TG_URL = "https://t.me/OneTonToken";
+const CHART = "https://www.geckoterminal.com/ton/pools/EQCSyBHPkqVpdvSMjOsInmyNy7INgJXa-6LcvHSbC1gekolT";
+const DEX_BUY = "https://app.ston.fi/swap?ft=TON&tt=" + CONTRACT;
 
-/* ========= GeckoTerminal API (token endpoint) =========
-   Root: https://api.geckoterminal.com/api/v2  (public; cached ~1 min)
-   We pull token price & caps directly by token (jetton) address on TON.
-   Docs note market_cap_usd may be null; we fallback to fdv_usd. */
-const TOKEN_API = `https://api.geckoterminal.com/api/v2/networks/ton/tokens/${CONTRACT}`;
+/* Set links */
+document.getElementById("ca").textContent = CONTRACT;
+document.getElementById("x-link").href = X_URL;
+document.getElementById("tg-link").href = TG_URL;
+document.getElementById("chart-link").href = CHART;
+document.getElementById("buy-link").href = DEX_BUY;
+document.getElementById("barChart").href = CHART;
+document.getElementById("barBuy").href = DEX_BUY;
 
-/* ========= Derived ========= */
-const TONVIEW  = `https://tonviewer.com/jetton/${CONTRACT}`;
-const TONSCAN  = `https://tonscan.org/jetton/${CONTRACT}`;
-
-/* ========= Helper ========= */
-const $ = (s) => document.querySelector(s);
-const fmtUSD = (n) => {
-  if (n == null || isNaN(n)) return "—";
-  const x = Number(n);
-  return x >= 1 ? "$" + x.toLocaleString(undefined, {maximumFractionDigits:2})
-                : "$" + x.toFixed(6);
-};
-const fmtMC = (n) => {
-  if (n == null || isNaN(n)) return "—";
-  const x = Number(n);
-  if (x >= 1e9) return "$" + (x/1e9).toFixed(2) + "B";
-  if (x >= 1e6) return "$" + (x/1e6).toFixed(2) + "M";
-  if (x >= 1e3) return "$" + (x/1e3).toFixed(2) + "K";
-  return "$" + x.toFixed(0);
-};
-
-/* ========= Wire links & content ========= */
-$("#ca").textContent = CONTRACT;
-$("#x-link").href = X_URL; $("#join-x").href = X_URL;
-$("#tg-link").href = TG_URL; $("#join-tg").href = TG_URL;
-$("#tonviewer-link").href = TONVIEW; $("#tonscan-link").href = TONSCAN;
-$("#chart-link").href = CHART; $("#barChart").href = CHART;
-$("#buy-link").href = DEX_BUY; $("#barBuy").href = DEX_BUY;
-$("#year").textContent = new Date().getFullYear();
-
-/* ========= Copy contract (both places) ========= */
-$("#copy").addEventListener("click", () => copyCA());
-$("#barCopy").addEventListener("click", () => copyCA());
-async function copyCA(){
-  try{ await navigator.clipboard.writeText(CONTRACT); flash("Copied! 📋"); }
-  catch{ flash("Copy failed 😵", "err"); }
+/* Copy contract */
+function copyCA(){
+  navigator.clipboard.writeText(CONTRACT).then(()=>{
+    alert("Contract copied!");
+  });
 }
-function flash(msg, type){
-  const n = document.createElement("div");
-  n.textContent = msg;
-  n.style.cssText = `position:fixed;left:50%;top:16px;transform:translateX(-50%);
-    background:${type==="err"?"#ff6b6b":"#70ff95"};color:#05101d;padding:10px 16px;border-radius:12px;font-weight:1000;z-index:9999`;
-  document.body.appendChild(n); setTimeout(()=>n.remove(),1300);
-}
+document.getElementById("copy").addEventListener("click", copyCA);
+document.getElementById("barCopy").addEventListener("click", copyCA);
 
-/* ========= Live price & market cap via GeckoTerminal ========= */
+/* Live price from GeckoTerminal */
 async function loadLive(){
   try{
-    const r = await fetch(TOKEN_API, {
-      headers: { "accept": "application/json" } // can set version header if you like
-      // Example: "accept": "application/json;version=20230302"
-    });
+    const r = await fetch(`https://api.geckoterminal.com/api/v2/networks/ton/tokens/${CONTRACT}`);
     const j = await r.json();
     const attr = j?.data?.attributes;
-    if(!attr) throw new Error("No token data");
-
-    const price = parseFloat(attr.price_usd);
-    // Prefer market_cap_usd; fallback to fdv_usd when null
-    const mcRaw = attr.market_cap_usd ?? attr.fdv_usd ?? null;
-
-    $("#price").textContent = fmtUSD(price);
-    $("#mcap").textContent  = fmtMC(mcRaw);
-    $("#barPrice").textContent = fmtUSD(price);
-    $("#barMcap").textContent  = fmtMC(mcRaw);
-
-    const t = new Date();
-    $("#lastUpdated").textContent = "Updated " + t.toLocaleTimeString();
-  }catch(e){
-    console.warn(e);
-    $("#lastUpdated").textContent = "Live feed unavailable";
-  }
+    if(attr){
+      const price = parseFloat(attr.price_usd);
+      const mc = attr.market_cap_usd ?? attr.fdv_usd;
+      document.getElementById("barPrice").textContent = price ? "$"+price.toFixed(6) : "—";
+      document.getElementById("barMcap").textContent = mc ? "$"+Number(mc).toLocaleString() : "—";
+    }
+  }catch(e){console.warn("Price fetch failed",e);}
 }
-loadLive();
-setInterval(loadLive, 30000); // refresh every 30s
-
-/* ========= Rotating line in marquee ========= */
-const ROTATE_LINES = [
-  "WAGMI ✨",
-  "CROWDED WITH WINS 🐦",
-  "TELE ENERGY ONLY ⚡️",
-  "1 TOKEN, INFINITE MEMES ♾️",
-  "BUY BUTTON GO BRRR 🧊",
-  "WE'RE SO BACK 🔁"
-];
-let rIdx = 0;
-setInterval(()=>{
-  rIdx = (rIdx + 1) % ROTATE_LINES.length;
-  const el = document.getElementById("rotatingLine");
-  el.textContent = ROTATE_LINES[rIdx];
-}, 2200);
-
-/* ========= TON + Telegram Logo Rain ========= */
-const rain = document.getElementById("logoRain");
-const COLORS = ["#14a8ff","#23d2ff","#2aa3e0","#ffffff"];
-function spawnDrop(){
-  const d = document.createElement("div");
-  d.className = "drop";
-  const isTON = Math.random() < 0.55;
-  const size = 18 + Math.random()*28;
-  const left = Math.random()*100;
-  const dur  = 8 + Math.random()*10;
-  const delay= Math.random()*10;
-  const rot0 = Math.floor(Math.random()*360);
-
-  d.style.left = left + "vw";
-  d.style.animation = `fall ${dur}s linear ${delay}s infinite`;
-  d.style.transform = `rotate(${rot0}deg)`;
-
-  const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-  svg.setAttribute("viewBox","0 0 24 24");
-  svg.setAttribute("width", size);
-  svg.setAttribute("height", size);
-  svg.style.color = COLORS[Math.floor(Math.random()*COLORS.length)];
-  const use = document.createElementNS("http://www.w3.org/2000/svg","use");
-  use.setAttributeNS("http://www.w3.org/1999/xlink","href", isTON ? "#ico-ton" : "#ico-tg");
-  svg.appendChild(use);
-  d.appendChild(svg);
-  rain.appendChild(d);
-
-  setTimeout(()=>{ d.remove(); }, (dur+delay)*1000*1.2);
-}
-for(let i=0;i<40;i++) spawnDrop();
-setInterval(spawnDrop, 500);
-
-/* ========= Party mode (confetti) ========= */
-const conf = $("#confetti");
-$("#party").addEventListener("click", () => {
-  conf.classList.add("active");
-  burst();
-  setTimeout(()=> conf.classList.remove("active"), 1800);
-});
-function burst(){
-  conf.innerHTML = "";
-  const colors = ["#14a8ff","#23d2ff","#ffd166","#ff7ad9","#70ff95","#ffffff"];
-  for(let i=0;i<140;i++){
-    const c = document.createElement("i");
-    const x = Math.random()*100; const d = 600 + Math.random()*1200;
-    c.style.left = x + "vw"; c.style.top = "-6vh";
-    c.style.background = colors[Math.floor(Math.random()*colors.length)];
-    c.style.transform = `translateY(0) rotate(${Math.random()*360}deg)`;
-    c.style.animationDuration = (d/1000) + "s"; c.style.opacity = .95;
-    conf.appendChild(c);
-  }
-}
-
-/* ========= Keyboard shortcuts ========= */
-document.addEventListener("keydown", (e)=>{
-  if(e.key.toLowerCase()==="c"){ $("#copy").focus(); }
-  if(e.key.toLowerCase()==="b"){ $("#buy-link").focus(); }
-});
+loadLive(); setInterval(loadLive,30000);
 </script>
 </body>
 </html>
