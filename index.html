@@ -118,14 +118,7 @@ section{padding:28px 0}
 /* --- Footer --- */
 footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; font-size:14px}
 
-/* --- Party Burst (logos) --- */
-.confetti{position:fixed; inset:0; pointer-events:none; z-index:20; display:none}
-.confetti.active{display:block}
-.piece{position:absolute; will-change:transform,opacity; filter: drop-shadow(0 8px 14px rgba(0,0,0,.35))}
-.piece svg{display:block}
-@keyframes partyFall{to{ transform: translateY(110vh) rotate(720deg); opacity:1 }}
-
- /* --- Fixed BUY bar --- */
+/* --- Fixed BUY bar --- */
 .buybar{
   position:fixed; left:0; right:0; bottom:0; z-index:30;
   backdrop-filter: blur(10px);
@@ -172,7 +165,6 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
       <strong>1TON</strong>
     </a>
     <div class="cta">
-      <a class="btn sun" id="party">🎉 Party Mode</a>
       <a class="btn" id="buy-link" target="_blank" rel="noopener">BUY</a>
     </div>
   </div>
@@ -263,7 +255,6 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
   <section id="wall">
     <div class="sticker pop" style="--rot:-0.4deg">
       <div class="badge">Meme Wall</div>
-      <p class="sub" style="margin-top:10px">Edit these in the HTML to change the vibe. The marquee line also rotates below.</p>
       <div class="wall" id="wallGrid" style="margin-top:12px">
         <div class="tag">1TON TO TELE MOON 🌙</div>
         <div class="tag">TONIANS DON’T SLEEP 🦾</div>
@@ -297,9 +288,6 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
   </div>
 </footer>
 
-<!-- Party Burst Layer -->
-<div class="confetti" id="confetti"></div>
-
 <!-- Fixed BUY bar -->
 <div class="buybar" role="region" aria-label="Quick actions">
   <div class="row">
@@ -325,7 +313,10 @@ const CHART    = "https://www.geckoterminal.com/ton/pools/EQCSyBHPkqVpdvSMjOsInm
 /* STON.fi BUY LINK (wired) */
 const DEX_BUY  = "https://app.ston.fi/swap?chartVisible=false&chartInterval=1w&ft=TON&tt=EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbK7FbJnv1q4U";
 
-/* ========= GeckoTerminal API (token endpoint) ========= */
+/* ========= GeckoTerminal API (token endpoint) =========
+   Root: https://api.geckoterminal.com/api/v2  (public; cached ~1 min)
+   We pull token price & caps directly by token (jetton) address on TON.
+   market_cap_usd may be null; fallback to fdv_usd. */
 const TOKEN_API = `https://api.geckoterminal.com/api/v2/networks/ton/tokens/${CONTRACT}`;
 
 /* ========= Derived ========= */
@@ -447,53 +438,6 @@ function spawnDrop(){
 }
 for(let i=0;i<40;i++) spawnDrop();
 setInterval(spawnDrop, 500);
-
-/* ========= Party Mode: burst of TON + Telegram logos ========= */
-const conf = $("#confetti");
-$("#party").addEventListener("click", () => {
-  partyBurst();
-});
-
-function partyBurst(){
-  conf.innerHTML = "";
-  conf.classList.add("active");
-
-  const pieces = Math.min(160, Math.floor(window.innerWidth / 6)); // responsive count
-  for(let i=0;i<pieces;i++){
-    const piece = document.createElement("div");
-    piece.className = "piece";
-
-    const isTON = Math.random() < 0.6;              // more TON than TG
-    const size  = 18 + Math.random()*36;            // 18px - 54px
-    const x     = Math.random()*100;                // vw
-    const rot0  = Math.floor(Math.random()*360);
-    const dur   = 0.9 + Math.random()*1.6;          // 0.9s - 2.5s
-    const delay = Math.random()*0.25;               // small stagger
-
-    piece.style.left = x + "vw";
-    piece.style.top  = "-8vh";
-    piece.style.animation = `partyFall ${dur}s linear ${delay}s forwards`;
-    piece.style.transform = `rotate(${rot0}deg)`;
-
-    const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-    svg.setAttribute("viewBox","0 0 24 24");
-    svg.setAttribute("width", size);
-    svg.setAttribute("height", size);
-    svg.style.color = COLORS[Math.floor(Math.random()*COLORS.length)];
-    const use = document.createElementNS("http://www.w3.org/2000/svg","use");
-    use.setAttributeNS("http://www.w3.org/1999/xlink","href", isTON ? "#ico-ton" : "#ico-tg");
-    svg.appendChild(use);
-
-    piece.appendChild(svg);
-    conf.appendChild(piece);
-  }
-
-  // auto-hide the party layer after the longest animation ends
-  const maxTime = 2600; // ms
-  setTimeout(()=> conf.classList.remove("active"), maxTime);
-  // cleanup old nodes to keep DOM light
-  setTimeout(()=> conf.innerHTML = "", maxTime + 200);
-}
 
 /* ========= Keyboard shortcuts ========= */
 document.addEventListener("keydown", (e)=>{
