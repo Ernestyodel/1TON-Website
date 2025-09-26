@@ -19,9 +19,8 @@
 :root{
   --bg1:#060b18; --bg2:#0b1226;
   --tone:#14a8ff; --tone2:#23d2ff; --ink:#eaf3ff;
-  --pink:#ff7ad9; --lime:#70ff95; --sun:#ffd166;
+  --lime:#70ff95; --sun:#ffd166;
   --muted:#9db3cc; --stroke:rgba(255,255,255,.12);
-  --glass:rgba(255,255,255,.08);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -42,7 +41,7 @@ header{position:sticky; top:0; z-index:10; backdrop-filter: blur(12px);
   border-bottom:1px solid var(--stroke)}
 .nav{display:flex; align-items:center; justify-content:space-between; min-height:64px}
 .brand img.logo-img{
-  width:38px; height:38px; border-radius:12px; object-fit:cover;
+  width:40px; height:40px; border-radius:12px; object-fit:cover;
   box-shadow: inset 0 0 12px rgba(255,255,255,.25), 0 8px 18px rgba(20,168,255,.35);
 }
 
@@ -63,7 +62,7 @@ header{position:sticky; top:0; z-index:10; backdrop-filter: blur(12px);
 /* Hero */
 .hero{padding:40px 0; text-align:center}
 .hero h1{font-size:42px; line-height:1.1; margin:0 0 12px}
-.hero .accent{background:linear-gradient(90deg, var(--tone2), var(--pink));
+.hero .accent{background:linear-gradient(90deg, var(--tone2), var(--lime));
   -webkit-background-clip:text; color:transparent}
 .hero p{color:#cfe5ff; font-size:18px; margin:0 0 20px}
 .cta{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
@@ -106,7 +105,7 @@ header{position:sticky; top:0; z-index:10; backdrop-filter: blur(12px);
   <div class="wrap nav">
     <a class="brand" href="#"><img src="logo.png" alt="1TON" class="logo-img" /></a>
     <div class="cta">
-      <a class="btn sun" id="party">🎉 Party</a>
+      <a class="btn sun">🎉 Party</a>
       <a class="btn" id="buy-link" target="_blank">BUY</a>
     </div>
   </div>
@@ -169,6 +168,7 @@ const X_URL = "https://x.com/1Ton1Ton";
 const TG_URL = "https://t.me/OneTonToken";
 const CHART = "https://www.geckoterminal.com/ton/pools/EQCSyBHPkqVpdvSMjOsInmyNy7INgJXa-6LcvHSbC1gekolT";
 const DEX_BUY = "https://app.ston.fi/swap?ft=TON&tt=" + CONTRACT;
+const TOKEN_API = `https://api.geckoterminal.com/api/v2/networks/ton/tokens/${CONTRACT}`;
 
 /* Set links */
 document.getElementById("ca").textContent = CONTRACT;
@@ -188,10 +188,10 @@ function copyCA(){
 document.getElementById("copy").addEventListener("click", copyCA);
 document.getElementById("barCopy").addEventListener("click", copyCA);
 
-/* Live price from GeckoTerminal */
+/* Live price & MC from GeckoTerminal */
 async function loadLive(){
   try{
-    const r = await fetch(`https://api.geckoterminal.com/api/v2/networks/ton/tokens/${CONTRACT}`);
+    const r = await fetch(TOKEN_API);
     const j = await r.json();
     const attr = j?.data?.attributes;
     if(attr){
