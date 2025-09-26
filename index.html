@@ -7,17 +7,16 @@
 <meta name="description" content="1TON — a loud, fun, meme-native token on TON. No boring vibes." />
 <meta name="theme-color" content="#14a8ff" />
 
-<!-- Social Preview -->
+<!-- Favicon / app icons (local) -->
+<link rel="icon" href="logo.png" />
+<link rel="apple-touch-icon" href="logo.png" />
+
+<!-- Social Preview 
+Note: most platforms prefer absolute URLs. This uses local logo.png; if you host, replace with the hosted absolute URL. -->
 <meta property="og:title" content="1TON — Meme On TON" />
 <meta property="og:description" content="It’s simple: 1 token, TON energy, meme forever." />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="data:image/svg+xml;utf8,
-<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'>
-  <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%2314a8ff'/><stop offset='100%' stop-color='%2323d2ff'/></linearGradient></defs>
-  <rect width='100%' height='100%' fill='%23060b18'/>
-  <text x='50%' y='50%' text-anchor='middle' font-family='Arial' font-size='180' fill='url(%23g)' font-weight='900' dy='-18'>1TON</text>
-  <text x='50%' y='62%' text-anchor='middle' font-family='Arial' font-size='56' fill='%23cbe6ff'>Meme on TON</text>
-</svg>"/>
+<meta property="og:image" content="logo.png" />
 
 <style>
 :root{
@@ -85,9 +84,14 @@ header{position:sticky; top:0; z-index:10; backdrop-filter: blur(12px);
 .nav{display:flex; align-items:center; justify-content:space-between; min-height:64px; gap:10px}
 .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink)}
 .logo{
+  width:38px; height:38px; border-radius:12px; display:block; object-fit:cover;
+  box-shadow: inset 0 0 12px rgba(255,255,255,.15), 0 8px 18px rgba(20,168,255,.35);
+}
+/* graceful fallback block if image fails */
+.logo-fallback{
   width:38px; height:38px; border-radius:12px; display:grid; place-items:center; font-weight:1000;
-  background:conic-gradient(from 210deg, var(--tone2), var(--tone)); text-shadow:0 2px 0 rgba(0,0,0,.35);
-  box-shadow: inset 0 0 12px rgba(255,255,255,.25), 0 8px 18px rgba(20,168,255,.35);
+  background:conic-gradient(from 210deg, var(--tone2), var(--tone));
+  text-shadow:0 2px 0 rgba(0,0,0,.35); box-shadow: inset 0 0 12px rgba(255,255,255,.25), 0 8px 18px rgba(20,168,255,.35);
 }
 
 /* --- Hero --- */
@@ -155,7 +159,6 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
 </style>
 </head>
 <body>
-
 <!-- Hidden SVG sprite -->
 <svg width="0" height="0" style="position:absolute;left:-9999px;top:-9999px">
   <symbol id="ico-ton" viewBox="0 0 24 24">
@@ -171,7 +174,12 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
 
 <header>
   <div class="wrap nav">
-    <a class="brand" href="#"><div class="logo">1</div><strong>1TON</strong></a>
+    <a class="brand" href="#">
+      <!-- Use local logo.png; fallback to gradient block if it fails -->
+      <img src="logo.png" alt="1TON logo" class="logo"
+           onerror="this.outerHTML='<div class=&quot;logo-fallback&quot;>1</div>'" />
+      <strong>1TON</strong>
+    </a>
     <div class="cta">
       <a class="btn sun" id="party">🎉 Party Mode</a>
       <a class="btn" id="buy-link" target="_blank" rel="noopener">BUY</a>
@@ -230,7 +238,6 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
         <code class="mono" id="ca" style="font-size:14px"></code>
         <a class="btn ghost" id="copy">Copy</a>
       </div>
-
       <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px">
         <a class="btn ghost" id="tonviewer-link" target="_blank" rel="noopener">Tonviewer</a>
         <a class="btn ghost" id="tonscan-link" target="_blank" rel="noopener">Tonscan</a>
@@ -383,7 +390,6 @@ async function loadLive(){
   try{
     const r = await fetch(TOKEN_API, {
       headers: { "accept": "application/json" } // can set version header if you like
-      // Example: "accept": "application/json;version=20230302"
     });
     const j = await r.json();
     const attr = j?.data?.attributes;
@@ -485,4 +491,4 @@ document.addEventListener("keydown", (e)=>{
 });
 </script>
 </body>
-</html>
+  </html>
