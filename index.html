@@ -37,8 +37,7 @@ body{
     radial-gradient(1200px 800px at 110% 10%, #102246 0%, transparent 55%),
     linear-gradient(180deg, var(--bg1), var(--bg2));
   overflow-x:hidden;
-  /* keep content above the fixed buy bar */
-  padding-bottom: 92px; /* bar height + spacing */
+  padding-bottom: 92px; /* space for fixed buy bar */
 }
 
 /* --- LOGO RAIN (TON + Telegram) --- */
@@ -145,9 +144,7 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
   background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
   font-weight:800; color:#cfe5ff;
 }
-.buybar .mini{
-  font-size:12px; color:#a9bfdc; font-weight:700; letter-spacing:.2px;
-}
+.buybar .mini{ font-size:12px; color:#a9bfdc; font-weight:700; letter-spacing:.2px; }
 .buybar .spacer{flex:1}
 .buybar .btn{padding:12px 14px; border-radius:12px}
 @media (max-width:520px){
@@ -159,20 +156,17 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
 </head>
 <body>
 
-<!-- Hidden SVG sprite: simple inline icons for rain -->
+<!-- Hidden SVG sprite -->
 <svg width="0" height="0" style="position:absolute;left:-9999px;top:-9999px">
-  <!-- Simplified TON diamond outline -->
   <symbol id="ico-ton" viewBox="0 0 24 24">
     <path d="M12 3 L20 9.5 L12 21 L4 9.5 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
     <path d="M12 3 L12 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
   </symbol>
-  <!-- Simplified Telegram paper plane -->
   <symbol id="ico-tg" viewBox="0 0 24 24">
     <polygon points="2,12 22,3 15,21 11,14 2,12" fill="currentColor"/>
   </symbol>
 </svg>
 
-<!-- Logo Rain Layer -->
 <div id="logoRain" aria-hidden="true"></div>
 
 <header>
@@ -250,12 +244,12 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
       <div class="sticker tile">
         <div class="badge">Price (USD)</div>
         <h3 class="mono" id="price">—</h3>
-        <p class="sub mini" id="lastUpdated" style="margin-top:6px">Live via Dexscreener</p>
+        <p class="sub mini" id="lastUpdated" style="margin-top:6px">Live via GeckoTerminal</p>
       </div>
       <div class="sticker tile">
         <div class="badge">Market Cap</div>
         <h3 class="mono" id="mcap">—</h3>
-        <p class="sub mini" style="margin-top:6px">Using marketCap (fallback: FDV)</p>
+        <p class="sub mini" style="margin-top:6px">Uses market_cap_usd (fallback: FDV)</p>
       </div>
       <div class="sticker tile">
         <div class="badge">Buttons</div>
@@ -328,14 +322,16 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
 const CONTRACT = "EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbK7FbJnv1q4U";
 const X_URL    = "https://x.com/1Ton1Ton";
 const TG_URL   = "https://t.me/OneTonToken";
-const CHART    = "https://dexscreener.com/ton/EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbJnv1q4U";
-/* STON.fi BUY LINK */
+/* GeckoTerminal pool page (your link) for the chart button */
+const CHART    = "https://www.geckoterminal.com/ton/pools/EQCSyBHPkqVpdvSMjOsInmyNy7INgJXa-6LcvHSbC1gekolT";
+/* STON.fi BUY LINK (wired) */
 const DEX_BUY  = "https://app.ston.fi/swap?chartVisible=false&chartInterval=1w&ft=TON&tt=EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbK7FbJnv1q4U";
 
-/* ========= Dexscreener Pair API (live data) =========
-   Docs: https://docs.dexscreener.com/api/reference -> /latest/dex/pairs/{chainId}/{pairId}
-*/
-const PAIR_API = "https://api.dexscreener.com/latest/dex/pairs/ton/EQBlr8-Ogg9odRB4gRTZ7xLhQAz5bvxXuwaHbK7FbJnv1q4U";
+/* ========= GeckoTerminal API (token endpoint) =========
+   Root: https://api.geckoterminal.com/api/v2  (public; cached ~1 min)
+   We pull token price & caps directly by token (jetton) address on TON.
+   Docs note market_cap_usd may be null; we fallback to fdv_usd. */
+const TOKEN_API = `https://api.geckoterminal.com/api/v2/networks/ton/tokens/${CONTRACT}`;
 
 /* ========= Derived ========= */
 const TONVIEW  = `https://tonviewer.com/jetton/${CONTRACT}`;
@@ -382,25 +378,29 @@ function flash(msg, type){
   document.body.appendChild(n); setTimeout(()=>n.remove(),1300);
 }
 
-/* ========= Live price & market cap via Dexscreener ========= */
+/* ========= Live price & market cap via GeckoTerminal ========= */
 async function loadLive(){
   try{
-    const r = await fetch(PAIR_API, {cache:"no-store"});
+    const r = await fetch(TOKEN_API, {
+      headers: { "accept": "application/json" } // can set version header if you like
+      // Example: "accept": "application/json;version=20230302"
+    });
     const j = await r.json();
-    const p = j?.pairs?.[0];
-    if(!p) throw new Error("No pair");
-    const price = parseFloat(p.priceUsd);
-    // Prefer marketCap; if missing, fall back to fdv
-    const mc = (p.marketCap ?? p.fdv ?? null);
+    const attr = j?.data?.attributes;
+    if(!attr) throw new Error("No token data");
+
+    const price = parseFloat(attr.price_usd);
+    // Prefer market_cap_usd; fallback to fdv_usd when null
+    const mcRaw = attr.market_cap_usd ?? attr.fdv_usd ?? null;
 
     $("#price").textContent = fmtUSD(price);
-    $("#mcap").textContent  = fmtMC(mc);
+    $("#mcap").textContent  = fmtMC(mcRaw);
     $("#barPrice").textContent = fmtUSD(price);
-    $("#barMcap").textContent  = fmtMC(mc);
+    $("#barMcap").textContent  = fmtMC(mcRaw);
+
     const t = new Date();
     $("#lastUpdated").textContent = "Updated " + t.toLocaleTimeString();
   }catch(e){
-    // keep previous values; show a subtle nudge once
     console.warn(e);
     $("#lastUpdated").textContent = "Live feed unavailable";
   }
