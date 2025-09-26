@@ -150,6 +150,7 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
     <a class="brand" href="#"><div class="logo">1</div><strong>1TON</strong></a>
     <div class="cta">
       <a class="btn sun" id="party">🎉 Party Mode</a>
+      <a class="btn" id="share">📸 Share Card</a>
       <a class="btn" id="buy-link" target="_blank" rel="noopener">BUY</a>
     </div>
   </div>
@@ -166,8 +167,8 @@ footer{border-top:1px solid var(--stroke); color:#a9bfdc; padding:24px 0 40px; f
 </div>
 
 <main class="wrap">
-  <!-- HERO -->
-  <section class="hero">
+  <!-- HERO (wrapped for screenshot) -->
+  <section class="hero" id="shareTarget">
     <div class="sticker pop" style="--rot:-0.6deg">
       <div class="badge">THE MEME</div>
       <h1><span class="accent">1TON</span> is the <span class="accent">ONE</span>—simple name, loud energy.</h1>
@@ -401,6 +402,68 @@ function burst(){
     conf.appendChild(c);
   }
 }
+
+/* ========= 📸 Share Card (PNG export, no libs) ========= */
+$("#share").addEventListener("click", async () => {
+  const node = document.getElementById("shareTarget");
+  const rect = node.getBoundingClientRect();
+  const width = Math.ceil(rect.width);
+  const height = Math.ceil(rect.height);
+  const scale = window.devicePixelRatio > 1 ? 2 : 2; // crisp on phones
+
+  // Collect inline <style> tags from this document so the clone renders correctly
+  const styleTags = Array.from(document.head.querySelectorAll("style"))
+    .map(s => s.outerHTML).join("");
+
+  // Clone the node so we can inject it in the SVG without IDs collisions
+  const clone = node.cloneNode(true);
+
+  // Wrap clone with a container to keep styles scoped and add padding if you want
+  const wrapper = document.createElement("div");
+  wrapper.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
+  wrapper.style.width = width + "px";
+  wrapper.style.height = height + "px";
+  wrapper.style.display = "block";
+  wrapper.innerHTML = styleTags + clone.outerHTML;
+
+  const serializer = new XMLSerializer();
+  const xhtml = serializer.serializeToString(wrapper);
+
+  // Background behind foreignObject to avoid transparent edges
+  const svg =
+`<svg xmlns="http://www.w3.org/2000/svg" width="${width*scale}" height="${height*scale}" viewBox="0 0 ${width} ${height}">
+  <rect width="100%" height="100%" fill="#060b18"/>
+  <foreignObject x="0" y="0" width="100%" height="100%">
+    ${xhtml}
+  </foreignObject>
+</svg>`;
+
+  const svgBlob = new Blob([svg], {type: "image/svg+xml;charset=utf-8"});
+  const url = URL.createObjectURL(svgBlob);
+
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = width*scale;
+    canvas.height = height*scale;
+    const ctx = canvas.getContext("2d");
+    // white shadow to make sticker pop if needed
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    URL.revokeObjectURL(url);
+
+    canvas.toBlob((blob) => {
+      const a = document.createElement("a");
+      a.download = "1ton-share-card.png";
+      a.href = URL.createObjectURL(blob);
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+      flash("PNG saved! 📸");
+    }, "image/png");
+  };
+  img.onerror = () => flash("Screenshot failed 😵", "err");
+  img.src = url;
+});
 
 /* ========= Keyboard shortcuts ========= */
 document.addEventListener("keydown", (e)=>{
